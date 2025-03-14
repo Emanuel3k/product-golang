@@ -21,5 +21,5 @@ func JSON(w http.ResponseWriter, code int, body any) {
 
 	w.WriteHeader(code)
 
-	w.Write(bytes)
+	_, _ = w.Write(bytes)
 }
