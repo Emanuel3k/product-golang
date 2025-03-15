@@ -43,6 +43,7 @@ func (pjr *productJsonRepository) GetByCodeValue(codeValue string) (*Product, er
 
 	return nil, nil
 }
+
 func (pjr *productJsonRepository) Create(request *Product) error {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
