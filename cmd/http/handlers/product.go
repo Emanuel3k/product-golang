@@ -33,7 +33,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 
 	res, err := ph.productService.GetById(productId)
 	if err != nil {
-
+		// todo
 	}
 
 	if res == nil {

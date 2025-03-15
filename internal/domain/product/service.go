@@ -17,7 +17,7 @@ func (ps *productService) GetAll() ([]*Product, error) {
 func (ps *productService) GetById(productId int) (*Product, error) {
 	res, err := ps.productRepository.GetById(productId)
 	if err != nil {
-
+		// todo
 	}
 
 	return res, nil
