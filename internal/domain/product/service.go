@@ -23,8 +23,8 @@ func (ps *productService) GetById(productId int) (*Product, error) {
 	return res, nil
 }
 
-func (ps *productService) Create(request BodyRequest) (*Product, error) {
-	exists, err := ps.productRepository.GetByCodeValue(request.CodeValue)
+func (ps *productService) Create(body CreateBodyRequest) (*Product, error) {
+	exists, err := ps.productRepository.GetByCodeValue(body.CodeValue)
 	if err != nil {
 		// todo
 		return nil, nil
@@ -35,7 +35,7 @@ func (ps *productService) Create(request BodyRequest) (*Product, error) {
 		return nil, nil
 	}
 
-	product := request.toDomain()
+	product := body.CreateToDomain()
 
 	if err := ps.productRepository.Create(&product); err != nil {
 		// todo
@@ -46,6 +46,23 @@ func (ps *productService) Create(request BodyRequest) (*Product, error) {
 
 func (ps *productService) DeleteById(productId int) error {
 	return ps.productRepository.DeleteById(productId)
+}
+
+func (ps *productService) UpdateById(productId int, body UpdateBodyRequest) (*Product, error) {
+
+	if body.CodeValue != nil {
+		exists, err := ps.productRepository.GetByCodeValue(*body.CodeValue)
+		if err != nil {
+			// todo
+			return nil, nil
+		}
+
+		if exists != nil && exists.ID != productId {
+			// todo
+		}
+	}
+
+	return ps.productRepository.UpdateById(productId, body)
 }
 
 func NewService(productRepository IRepository) IService {

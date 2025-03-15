@@ -46,7 +46,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var body product.BodyRequest
+	var body product.CreateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		// todo
 	}
@@ -79,6 +79,34 @@ func (ph *productHandler) DeleteById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.JSON(w, http.StatusNoContent, nil)
+}
+
+func (ph *productHandler) UpdateById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "productId")
+
+	productId, err := strconv.Atoi(id)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "Invalid product id")
+		return
+	}
+
+	var body product.UpdateBodyRequest
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		// todo
+	}
+
+	validate := validator.New()
+	if err := validate.Struct(body); err != nil {
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	res, err := ph.productService.UpdateById(productId, body)
+	if err != nil {
+		// todo
+	}
+
+	response.JSON(w, http.StatusOK, res)
 }
 
 func NewProductHandler(productService product.IService) productHandler {

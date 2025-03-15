@@ -10,7 +10,7 @@ type Product struct {
 	Price       float64 `json:"price"`
 }
 
-type BodyRequest struct {
+type CreateBodyRequest struct {
 	Name        string  `json:"name" validate:"required"`
 	Quantity    int     `json:"quantity" validate:"required"`
 	CodeValue   string  `json:"codeValue" validate:"required"`
@@ -19,22 +19,32 @@ type BodyRequest struct {
 	Price       float64 `json:"price" validate:"required"`
 }
 
-func (br *BodyRequest) toDomain() Product {
+type UpdateBodyRequest struct {
+	Name        *string  `json:"name"`
+	Quantity    *int     `json:"quantity"`
+	CodeValue   *string  `json:"codeValue"`
+	IsPublished *bool    `json:"isPublished"`
+	Expiration  *string  `json:"expiration"`
+	Price       *float64 `json:"price"`
+}
+
+func (cbr *CreateBodyRequest) CreateToDomain() Product {
 	return Product{
-		Name:        br.Name,
-		Quantity:    br.Quantity,
-		CodeValue:   br.CodeValue,
-		IsPublished: br.IsPublished,
-		Expiration:  br.Expiration,
-		Price:       br.Price,
+		Name:        cbr.Name,
+		Quantity:    cbr.Quantity,
+		CodeValue:   cbr.CodeValue,
+		IsPublished: cbr.IsPublished,
+		Expiration:  cbr.Expiration,
+		Price:       cbr.Price,
 	}
 }
 
 type IService interface {
 	GetAll() ([]*Product, error)
 	GetById(productId int) (*Product, error)
-	Create(body BodyRequest) (*Product, error)
+	Create(body CreateBodyRequest) (*Product, error)
 	DeleteById(productId int) error
+	UpdateById(productId int, body UpdateBodyRequest) (*Product, error)
 }
 
 type IRepository interface {
@@ -43,4 +53,5 @@ type IRepository interface {
 	Create(p *Product) error
 	GetByCodeValue(codeValue string) (*Product, error)
 	DeleteById(productId int) error
+	UpdateById(productId int, body UpdateBodyRequest) (*Product, error)
 }

@@ -74,6 +74,39 @@ func (pjr *productJsonRepository) DeleteById(productId int) error {
 	return nil
 }
 
+func (pjr *productJsonRepository) UpdateById(productId int, body UpdateBodyRequest) (*Product, error) {
+	if err := pjr.loadProducts(); err != nil {
+		// todo
+	}
+
+	product := pjr.products[productId]
+
+	if body.Name != nil {
+		product.Name = *body.Name
+	}
+	if body.Quantity != nil {
+		product.Quantity = *body.Quantity
+	}
+	if body.CodeValue != nil {
+		product.CodeValue = *body.CodeValue
+	}
+	if body.IsPublished != nil {
+		product.IsPublished = *body.IsPublished
+	}
+	if body.Expiration != nil {
+		product.Expiration = *body.Expiration
+	}
+	if body.Price != nil {
+		product.Price = *body.Price
+	}
+
+	if err := pjr.updateJson(); err != nil {
+		// todo
+	}
+
+	return product, nil
+}
+
 func (pjr *productJsonRepository) loadProducts() error {
 	tmp, err := storage.ReadJson[Product](path)
 	if err != nil {
