@@ -30,7 +30,7 @@ func (ps *productService) Create(request BodyRequest) (*Product, error) {
 		return nil, nil
 	}
 
-	if exists == nil {
+	if exists != nil {
 		// todo
 		return nil, nil
 	}
@@ -42,6 +42,10 @@ func (ps *productService) Create(request BodyRequest) (*Product, error) {
 	}
 
 	return &product, nil
+}
+
+func (ps *productService) DeleteById(productId int) error {
+	return ps.productRepository.DeleteById(productId)
 }
 
 func NewService(productRepository IRepository) IService {

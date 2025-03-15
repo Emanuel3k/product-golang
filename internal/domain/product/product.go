@@ -34,6 +34,7 @@ type IService interface {
 	GetAll() ([]*Product, error)
 	GetById(productId int) (*Product, error)
 	Create(body BodyRequest) (*Product, error)
+	DeleteById(productId int) error
 }
 
 type IRepository interface {
@@ -41,4 +42,5 @@ type IRepository interface {
 	GetById(productId int) (*Product, error)
 	Create(p *Product) error
 	GetByCodeValue(codeValue string) (*Product, error)
+	DeleteById(productId int) error
 }

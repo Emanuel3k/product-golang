@@ -17,6 +17,7 @@ func buildProductsRoutes() http.Handler {
 	r.Get("/", productHandler.GetAll)
 	r.Get("/{productId}", productHandler.GetById)
 	r.Post("/", productHandler.Create)
+	r.Delete("/{productId}", productHandler.DeleteById)
 
 	return r
 }

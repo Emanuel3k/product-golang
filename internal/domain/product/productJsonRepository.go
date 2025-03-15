@@ -2,6 +2,7 @@ package product
 
 import (
 	"github.com/emanuel3k/product-golang/storage"
+	"math/rand"
 )
 
 const path = "./storage/json/products.json"
@@ -49,15 +50,24 @@ func (pjr *productJsonRepository) Create(request *Product) error {
 		// todo
 	}
 
-	request.ID = len(pjr.products) + 1
+	request.ID = rand.Int()
 	pjr.products[request.ID] = request
 
-	products := make([]*Product, 0, len(pjr.products))
-	for _, p := range pjr.products {
-		products = append(products, p)
+	if err := pjr.updateJson(); err != nil {
+		// todo
 	}
 
-	if err := storage.WriteJson(path, products); err != nil {
+	return nil
+}
+
+func (pjr *productJsonRepository) DeleteById(productId int) error {
+	if err := pjr.loadProducts(); err != nil {
+		// todo
+	}
+
+	delete(pjr.products, productId)
+
+	if err := pjr.updateJson(); err != nil {
 		// todo
 	}
 
@@ -73,6 +83,18 @@ func (pjr *productJsonRepository) loadProducts() error {
 	pjr.products = make(map[int]*Product)
 	for _, p := range tmp {
 		pjr.products[p.ID] = p
+	}
+
+	return nil
+}
+
+func (pjr *productJsonRepository) updateJson() error {
+	var products []*Product
+	for _, p := range pjr.products {
+		products = append(products, p)
+	}
+	if err := storage.WriteJson(path, products); err != nil {
+		// todo
 	}
 
 	return nil

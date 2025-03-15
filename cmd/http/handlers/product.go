@@ -42,7 +42,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		response.JSON(w, http.StatusNoContent, nil)
 	}
 
-	response.JSON(w, http.StatusNoContent, res)
+	response.JSON(w, http.StatusOK, res)
 }
 
 func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
@@ -63,6 +63,22 @@ func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.JSON(w, http.StatusCreated, res)
+}
+
+func (ph *productHandler) DeleteById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "productId")
+
+	productId, err := strconv.Atoi(id)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "Invalid product id")
+		return
+	}
+
+	if err := ph.productService.DeleteById(productId); err != nil {
+		// todo
+	}
+
+	response.JSON(w, http.StatusNoContent, nil)
 }
 
 func NewProductHandler(productService product.IService) productHandler {
