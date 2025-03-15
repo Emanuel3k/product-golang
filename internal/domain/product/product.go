@@ -12,8 +12,10 @@ type Product struct {
 
 type IService interface {
 	GetAll() ([]*Product, error)
+	GetById(productId int) (*Product, error)
 }
 
 type IRepository interface {
 	GetAll() ([]*Product, error)
+	GetById(productId int) (*Product, error)
 }

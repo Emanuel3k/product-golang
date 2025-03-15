@@ -15,6 +15,7 @@ func buildProductsRoutes() http.Handler {
 	productHandler := handlers.NewProductHandler(productService)
 
 	r.Get("/", productHandler.GetAll)
+	r.Get("/{productId}", productHandler.GetById)
 
 	return r
 }
