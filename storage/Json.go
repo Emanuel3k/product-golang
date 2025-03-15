@@ -2,12 +2,27 @@ package storage
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 )
 
+func createFile(path string) error {
+	dir := filepath.Dir(path)
+
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func ReadJson[T any](path string) ([]*T, error) {
+	if err := createFile(path); err != nil {
+		return nil, err
+	}
+
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -22,19 +37,17 @@ func ReadJson[T any](path string) ([]*T, error) {
 }
 
 func WriteJson[T any](path string, data []*T) error {
-	dir := filepath.Dir(path)
-
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
-			return fmt.Errorf("failed to create directory: %w", err)
-		}
+	if err := createFile(path); err != nil {
+		return err
 	}
 
 	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
 
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", " ")
