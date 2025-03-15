@@ -30,7 +30,7 @@ func (ps *productService) Create(request BodyRequest) (*Product, error) {
 		return nil, nil
 	}
 
-	if exists != nil {
+	if exists == nil {
 		// todo
 		return nil, nil
 	}
