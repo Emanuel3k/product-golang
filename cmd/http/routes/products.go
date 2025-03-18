@@ -2,7 +2,8 @@ package routes
 
 import (
 	"github.com/emanuel3k/product-golang/cmd/http/handlers"
-	"github.com/emanuel3k/product-golang/internal/domain/product"
+	"github.com/emanuel3k/product-golang/internal/repositories"
+	"github.com/emanuel3k/product-golang/internal/services"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 )
@@ -10,8 +11,8 @@ import (
 func buildProductsRoutes() http.Handler {
 	r := chi.NewRouter()
 
-	productRepository := product.NewRepository()
-	productService := product.NewService(productRepository)
+	productRepository := repositories.NewRepository()
+	productService := services.NewService(productRepository)
 	productHandler := handlers.NewProductHandler(productService)
 
 	r.Get("/", productHandler.GetAll)

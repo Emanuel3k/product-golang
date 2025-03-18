@@ -1,10 +1,14 @@
-package product
+package services
+
+import (
+	"github.com/emanuel3k/product-golang/internal/domain"
+)
 
 type productService struct {
-	productRepository IRepository
+	productRepository domain.IRepository
 }
 
-func (ps *productService) GetAll() ([]*Product, error) {
+func (ps *productService) GetAll() ([]*domain.Product, error) {
 	res, err := ps.productRepository.GetAll()
 
 	if err != nil {
@@ -14,7 +18,7 @@ func (ps *productService) GetAll() ([]*Product, error) {
 	return res, nil
 }
 
-func (ps *productService) GetById(productId int) (*Product, error) {
+func (ps *productService) GetById(productId int) (*domain.Product, error) {
 	res, err := ps.productRepository.GetById(productId)
 	if err != nil {
 		// todo
@@ -23,7 +27,7 @@ func (ps *productService) GetById(productId int) (*Product, error) {
 	return res, nil
 }
 
-func (ps *productService) Create(body CreateBodyRequest) (*Product, error) {
+func (ps *productService) Create(body domain.CreateBodyRequest) (*domain.Product, error) {
 	exists, err := ps.productRepository.GetByCodeValue(body.CodeValue)
 	if err != nil {
 		// todo
@@ -48,7 +52,7 @@ func (ps *productService) DeleteById(productId int) error {
 	return ps.productRepository.DeleteById(productId)
 }
 
-func (ps *productService) UpdateById(productId int, body UpdateBodyRequest) (*Product, error) {
+func (ps *productService) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.Product, error) {
 
 	if body.CodeValue != nil {
 		exists, err := ps.productRepository.GetByCodeValue(*body.CodeValue)
@@ -65,6 +69,6 @@ func (ps *productService) UpdateById(productId int, body UpdateBodyRequest) (*Pr
 	return ps.productRepository.UpdateById(productId, body)
 }
 
-func NewService(productRepository IRepository) IService {
+func NewService(productRepository domain.IRepository) domain.IService {
 	return &productService{productRepository}
 }

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/emanuel3k/product-golang/internal/domain/product"
+	"github.com/emanuel3k/product-golang/internal/domain"
 	"github.com/emanuel3k/product-golang/pkg/web/response"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator"
@@ -11,7 +11,7 @@ import (
 )
 
 type productHandler struct {
-	productService product.IService
+	productService domain.IService
 }
 
 func (ph *productHandler) GetAll(w http.ResponseWriter, _ *http.Request) {
@@ -46,7 +46,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var body product.CreateBodyRequest
+	var body domain.CreateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		// todo
 	}
@@ -90,7 +90,7 @@ func (ph *productHandler) UpdateById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var body product.UpdateBodyRequest
+	var body domain.UpdateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		// todo
 	}
@@ -109,6 +109,6 @@ func (ph *productHandler) UpdateById(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, res)
 }
 
-func NewProductHandler(productService product.IService) productHandler {
+func NewProductHandler(productService domain.IService) productHandler {
 	return productHandler{productService}
 }

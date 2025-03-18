@@ -1,22 +1,23 @@
 package product
 
 import (
+	"github.com/emanuel3k/product-golang/internal/domain"
 	"github.com/emanuel3k/product-golang/storage"
 	"math/rand"
 )
 
 const path = "./storage/json/products.json"
 
-type productJsonRepository struct {
-	products map[int]*Product
+type JsonRepository struct {
+	products map[int]*domain.Product
 }
 
-func (pjr *productJsonRepository) GetAll() ([]*Product, error) {
+func (pjr *JsonRepository) GetAll() ([]*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
 	}
 
-	products := make([]*Product, 0, len(pjr.products))
+	products := make([]*domain.Product, 0, len(pjr.products))
 	for _, p := range pjr.products {
 		products = append(products, p)
 	}
@@ -24,14 +25,14 @@ func (pjr *productJsonRepository) GetAll() ([]*Product, error) {
 	return products, nil
 }
 
-func (pjr *productJsonRepository) GetById(productId int) (*Product, error) {
+func (pjr *JsonRepository) GetById(productId int) (*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
 	}
 	return pjr.products[productId], nil
 }
 
-func (pjr *productJsonRepository) GetByCodeValue(codeValue string) (*Product, error) {
+func (pjr *JsonRepository) GetByCodeValue(codeValue string) (*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
 	}
@@ -45,7 +46,7 @@ func (pjr *productJsonRepository) GetByCodeValue(codeValue string) (*Product, er
 	return nil, nil
 }
 
-func (pjr *productJsonRepository) Create(request *Product) error {
+func (pjr *JsonRepository) Create(request *domain.Product) error {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
 	}
@@ -60,7 +61,7 @@ func (pjr *productJsonRepository) Create(request *Product) error {
 	return nil
 }
 
-func (pjr *productJsonRepository) DeleteById(productId int) error {
+func (pjr *JsonRepository) DeleteById(productId int) error {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
 	}
@@ -74,7 +75,7 @@ func (pjr *productJsonRepository) DeleteById(productId int) error {
 	return nil
 }
 
-func (pjr *productJsonRepository) UpdateById(productId int, body UpdateBodyRequest) (*Product, error) {
+func (pjr *JsonRepository) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
 		// todo
 	}
@@ -107,13 +108,13 @@ func (pjr *productJsonRepository) UpdateById(productId int, body UpdateBodyReque
 	return product, nil
 }
 
-func (pjr *productJsonRepository) loadProducts() error {
-	tmp, err := storage.ReadJson[Product](path)
+func (pjr *JsonRepository) loadProducts() error {
+	tmp, err := storage.ReadJson[domain.Product](path)
 	if err != nil {
 		// todo
 	}
 
-	pjr.products = make(map[int]*Product)
+	pjr.products = make(map[int]*domain.Product)
 	for _, p := range tmp {
 		pjr.products[p.ID] = p
 	}
@@ -121,8 +122,8 @@ func (pjr *productJsonRepository) loadProducts() error {
 	return nil
 }
 
-func (pjr *productJsonRepository) updateJson() error {
-	var products []*Product
+func (pjr *JsonRepository) updateJson() error {
+	var products []*domain.Product
 	for _, p := range pjr.products {
 		products = append(products, p)
 	}
