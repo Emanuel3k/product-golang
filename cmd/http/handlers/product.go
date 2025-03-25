@@ -12,6 +12,11 @@ import (
 	"strconv"
 )
 
+var (
+	InvalidRequestId   = errors.New("invalid product id")
+	InvalidRequestBody = errors.New("invalid request body")
+)
+
 type productHandler struct {
 	productService domain.IService
 }
@@ -38,7 +43,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 
 	productId, err := strconv.Atoi(id)
 	if err != nil {
-		response.Error(w, http.StatusBadRequest, "Invalid product id")
+		response.Error(w, http.StatusBadRequest, InvalidRequestId.Error())
 		return
 	}
 
@@ -64,7 +69,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var body domain.CreateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		response.Error(w, http.StatusUnprocessableEntity, "Invalid request body")
+		response.Error(w, http.StatusUnprocessableEntity, InvalidRequestBody.Error())
 		return
 	}
 
@@ -94,7 +99,7 @@ func (ph *productHandler) DeleteById(w http.ResponseWriter, r *http.Request) {
 
 	productId, err := strconv.Atoi(id)
 	if err != nil {
-		response.Error(w, http.StatusBadRequest, "Invalid product id")
+		response.Error(w, http.StatusBadRequest, InvalidRequestId.Error())
 		return
 	}
 
@@ -117,13 +122,13 @@ func (ph *productHandler) UpdateById(w http.ResponseWriter, r *http.Request) {
 
 	productId, err := strconv.Atoi(id)
 	if err != nil {
-		response.Error(w, http.StatusBadRequest, "Invalid product id")
+		response.Error(w, http.StatusBadRequest, InvalidRequestId.Error())
 		return
 	}
 
 	var body domain.UpdateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		response.Error(w, http.StatusUnprocessableEntity, err.Error())
+		response.Error(w, http.StatusUnprocessableEntity, InvalidRequestBody.Error())
 		return
 	}
 
