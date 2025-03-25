@@ -21,3 +21,10 @@ func Conflict(message string) error {
 		message:    message,
 	}
 }
+
+func NotFound(message string) error {
+	return &AppError{
+		statusCode: http.StatusNotFound,
+		message:    message,
+	}
+}

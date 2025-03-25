@@ -52,12 +52,19 @@ func (ps *productService) DeleteById(productId int) error {
 }
 
 func (ps *productService) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.Product, error) {
+	exists, err := ps.productRepository.GetById(productId)
+	if err != nil {
+		return nil, err
+	}
+
+	if exists == nil {
+		return nil, appError.NotFound("product not found")
+	}
 
 	if body.CodeValue != nil {
 		exists, err := ps.productRepository.GetByCodeValue(*body.CodeValue)
 		if err != nil {
-			// todo
-			return nil, nil
+			return nil, err
 		}
 
 		if exists != nil && exists.ID != productId {
