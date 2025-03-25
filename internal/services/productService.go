@@ -9,26 +9,36 @@ type productService struct {
 	productRepository domain.IRepository
 }
 
-func (ps *productService) GetAll() ([]*domain.Product, error) {
-	res, err := ps.productRepository.GetAll()
+func (ps *productService) GetAll() ([]*domain.ResponseBody, error) {
+	products, err := ps.productRepository.GetAll()
 
 	if err != nil {
 		return nil, err
 	}
 
+	res := make([]*domain.ResponseBody, 0, len(products))
+
+	for _, product := range products {
+		res = append(res, product.ToResponse())
+	}
+
 	return res, nil
 }
 
-func (ps *productService) GetById(productId int) (*domain.Product, error) {
+func (ps *productService) GetById(productId int) (*domain.ResponseBody, error) {
 	res, err := ps.productRepository.GetById(productId)
 	if err != nil {
 		return nil, err
 	}
 
-	return res, nil
+	if res == nil {
+		return nil, nil
+	}
+
+	return res.ToResponse(), nil
 }
 
-func (ps *productService) Create(body domain.CreateBodyRequest) (*domain.Product, error) {
+func (ps *productService) Create(body domain.CreateBodyRequest) (*domain.ResponseBody, error) {
 	exists, err := ps.productRepository.GetByCodeValue(body.CodeValue)
 	if err != nil {
 		return nil, err
@@ -44,14 +54,14 @@ func (ps *productService) Create(body domain.CreateBodyRequest) (*domain.Product
 		return nil, err
 	}
 
-	return &product, nil
+	return product.ToResponse(), nil
 }
 
 func (ps *productService) DeleteById(productId int) error {
 	return ps.productRepository.DeleteById(productId)
 }
 
-func (ps *productService) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.Product, error) {
+func (ps *productService) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.ResponseBody, error) {
 	exists, err := ps.productRepository.GetById(productId)
 	if err != nil {
 		return nil, err
@@ -72,7 +82,12 @@ func (ps *productService) UpdateById(productId int, body domain.UpdateBodyReques
 		}
 	}
 
-	return ps.productRepository.UpdateById(productId, body)
+	res, err := ps.productRepository.UpdateById(productId, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return res.ToResponse(), nil
 }
 
 func NewService(productRepository domain.IRepository) domain.IService {

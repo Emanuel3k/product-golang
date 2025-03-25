@@ -28,6 +28,16 @@ type UpdateBodyRequest struct {
 	Price       *float64 `json:"price"`
 }
 
+type ResponseBody struct {
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Quantity    int     `json:"quantity"`
+	CodeValue   string  `json:"codeValue"`
+	IsPublished bool    `json:"isPublished"`
+	Expiration  string  `json:"expiration"`
+	Price       float64 `json:"price"`
+}
+
 func (cbr *CreateBodyRequest) CreateToDomain() Product {
 	return Product{
 		Name:        cbr.Name,
@@ -39,12 +49,24 @@ func (cbr *CreateBodyRequest) CreateToDomain() Product {
 	}
 }
 
+func (p *Product) ToResponse() *ResponseBody {
+	return &ResponseBody{
+		ID:          p.ID,
+		Name:        p.Name,
+		Quantity:    p.Quantity,
+		CodeValue:   p.CodeValue,
+		IsPublished: p.IsPublished,
+		Expiration:  p.Expiration,
+		Price:       p.Price,
+	}
+}
+
 type IService interface {
-	GetAll() ([]*Product, error)
-	GetById(productId int) (*Product, error)
-	Create(body CreateBodyRequest) (*Product, error)
+	GetAll() ([]*ResponseBody, error)
+	GetById(productId int) (*ResponseBody, error)
+	Create(body CreateBodyRequest) (*ResponseBody, error)
 	DeleteById(productId int) error
-	UpdateById(productId int, body UpdateBodyRequest) (*Product, error)
+	UpdateById(productId int, body UpdateBodyRequest) (*ResponseBody, error)
 }
 
 type IRepository interface {
