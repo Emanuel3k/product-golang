@@ -1,6 +1,7 @@
 package product
 
 import (
+	"errors"
 	"github.com/emanuel3k/product-golang/internal/domain"
 	"github.com/emanuel3k/product-golang/storage"
 	"math/rand"
@@ -8,13 +9,16 @@ import (
 
 const path = "./storage/json/products.json"
 
+var loadingJsonError = errors.New("appError loading products json")
+var updatingJsonError = errors.New("appError updating products json")
+
 type JsonRepository struct {
 	products map[int]*domain.Product
 }
 
 func (pjr *JsonRepository) GetAll() ([]*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
-		// todo
+		return nil, loadingJsonError
 	}
 
 	products := make([]*domain.Product, 0, len(pjr.products))
@@ -27,14 +31,14 @@ func (pjr *JsonRepository) GetAll() ([]*domain.Product, error) {
 
 func (pjr *JsonRepository) GetById(productId int) (*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
-		// todo
+		return nil, loadingJsonError
 	}
 	return pjr.products[productId], nil
 }
 
 func (pjr *JsonRepository) GetByCodeValue(codeValue string) (*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
-		// todo
+		return nil, loadingJsonError
 	}
 
 	for _, p := range pjr.products {
@@ -48,14 +52,14 @@ func (pjr *JsonRepository) GetByCodeValue(codeValue string) (*domain.Product, er
 
 func (pjr *JsonRepository) Create(request *domain.Product) error {
 	if err := pjr.loadProducts(); err != nil {
-		// todo
+		return loadingJsonError
 	}
 
 	request.ID = rand.Int()
 	pjr.products[request.ID] = request
 
 	if err := pjr.updateJson(); err != nil {
-		// todo
+		return updatingJsonError
 	}
 
 	return nil
@@ -63,13 +67,13 @@ func (pjr *JsonRepository) Create(request *domain.Product) error {
 
 func (pjr *JsonRepository) DeleteById(productId int) error {
 	if err := pjr.loadProducts(); err != nil {
-		// todo
+		return loadingJsonError
 	}
 
 	delete(pjr.products, productId)
 
 	if err := pjr.updateJson(); err != nil {
-		// todo
+		return updatingJsonError
 	}
 
 	return nil
@@ -77,7 +81,7 @@ func (pjr *JsonRepository) DeleteById(productId int) error {
 
 func (pjr *JsonRepository) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.Product, error) {
 	if err := pjr.loadProducts(); err != nil {
-		// todo
+		return nil, loadingJsonError
 	}
 
 	product := pjr.products[productId]
@@ -102,7 +106,7 @@ func (pjr *JsonRepository) UpdateById(productId int, body domain.UpdateBodyReque
 	}
 
 	if err := pjr.updateJson(); err != nil {
-		// todo
+		return nil, updatingJsonError
 	}
 
 	return product, nil
