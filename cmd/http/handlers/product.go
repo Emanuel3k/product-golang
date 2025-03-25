@@ -64,7 +64,7 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var body domain.CreateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		response.Error(w, http.StatusBadRequest, "Invalid request body")
+		response.Error(w, http.StatusUnprocessableEntity, "Invalid request body")
 		return
 	}
 
@@ -123,13 +123,7 @@ func (ph *productHandler) UpdateById(w http.ResponseWriter, r *http.Request) {
 
 	var body domain.UpdateBodyRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		var errResponse *appError.AppError
-		if errors.As(err, &errResponse) {
-			response.Error(w, errResponse.StatusCode(), errResponse.Error())
-			return
-		}
-
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		response.Error(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
