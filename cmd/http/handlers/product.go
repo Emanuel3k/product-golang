@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
 	"errors"
 	"github.com/emanuel3k/product-golang/internal/domain"
 	"github.com/emanuel3k/product-golang/pkg/appError"
+	"github.com/emanuel3k/product-golang/pkg/web/request"
 	"github.com/emanuel3k/product-golang/pkg/web/response"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator"
@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	InvalidRequestId   = errors.New("invalid product id")
-	InvalidRequestBody = errors.New("invalid request body")
+	InvalidRequestId = errors.New("invalid product id")
 )
 
 type productHandler struct {
@@ -68,8 +67,8 @@ func (ph *productHandler) GetById(w http.ResponseWriter, r *http.Request) {
 
 func (ph *productHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var body domain.CreateBodyRequest
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		response.Error(w, http.StatusUnprocessableEntity, InvalidRequestBody.Error())
+	if err := request.JSON(r, &body); err != nil {
+		response.Error(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
@@ -127,8 +126,8 @@ func (ph *productHandler) UpdateById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var body domain.UpdateBodyRequest
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		response.Error(w, http.StatusUnprocessableEntity, InvalidRequestBody.Error())
+	if err := request.JSON(r, &body); err != nil {
+		response.Error(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 

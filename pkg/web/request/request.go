@@ -3,14 +3,12 @@ package request
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 )
 
 var (
 	ErrRequestContentTypeNotJSON = errors.New("request content type is not application/json")
-
-	ErrRequestJSONInvalid = errors.New("request json invalid")
+	InvalidRequestBody           = errors.New("invalid request body")
 )
 
 func JSON(r *http.Request, ptr any) (err error) {
@@ -22,7 +20,7 @@ func JSON(r *http.Request, ptr any) (err error) {
 
 	err = json.NewDecoder(r.Body).Decode(ptr)
 	if err != nil {
-		err = fmt.Errorf("%w. %v", ErrRequestJSONInvalid, err)
+		err = InvalidRequestBody
 		return
 	}
 
