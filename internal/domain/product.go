@@ -72,7 +72,7 @@ type IService interface {
 type IRepository interface {
 	GetAll() ([]*Product, error)
 	GetById(productId int) (*Product, error)
-	Create(p *Product) error
+	Create(body *Product) error
 	GetByCodeValue(codeValue string) (*Product, error)
 	DeleteById(productId int) error
 	UpdateById(productId int, body UpdateBodyRequest) (*Product, error)
