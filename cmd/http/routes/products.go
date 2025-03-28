@@ -4,6 +4,7 @@ import (
 	"github.com/emanuel3k/product-golang/cmd/http/handlers"
 	"github.com/emanuel3k/product-golang/internal/repositories"
 	"github.com/emanuel3k/product-golang/internal/services"
+	"github.com/emanuel3k/product-golang/storage/postgres"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 )
@@ -11,7 +12,8 @@ import (
 func buildProductsRoutes() http.Handler {
 	r := chi.NewRouter()
 
-	productRepository := repositories.NewRepository()
+	psql, _ := postgres.Config()
+	productRepository := repositories.NewRepository(psql)
 	productService := services.NewService(productRepository)
 	productHandler := handlers.NewProductHandler(productService)
 
