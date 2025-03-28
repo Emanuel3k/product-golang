@@ -1,5 +1,4 @@
 .idea
 tmp
 storage/json
-storage/postgres
 .docker
