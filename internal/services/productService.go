@@ -82,12 +82,13 @@ func (ps *productService) UpdateById(productId int, body domain.UpdateBodyReques
 		}
 	}
 
-	res, err := ps.productRepository.UpdateById(productId, body)
-	if err != nil {
+	product := body.UpdateToDomain()
+
+	if err := ps.productRepository.UpdateById(productId, product); err != nil {
 		return nil, err
 	}
 
-	return res.ToResponse(), nil
+	return product.ToResponse(), nil
 }
 
 func NewService(productRepository domain.IRepository) domain.IService {

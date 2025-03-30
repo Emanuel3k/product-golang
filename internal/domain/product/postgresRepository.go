@@ -82,6 +82,12 @@ func (pr PostgresRepository) DeleteById(productId int) error {
 	return nil
 }
 
-func (pr PostgresRepository) UpdateById(productId int, body domain.UpdateBodyRequest) (*domain.Product, error) {
-	panic("implement me")
+func (pr PostgresRepository) UpdateById(productId int, body *domain.Product) error {
+	row := pr.Conn.QueryRow("Update products set name = $1, quantity = $2, code_value = $3, is_published = $4, expiration = $5, price = $6 where id = $7 returning id", body.Name, body.Quantity, body.CodeValue, body.IsPublished, body.Expiration, body.Price, productId)
+
+	if err := row.Scan(&body.ID); err != nil {
+		return err
+	}
+
+	return nil
 }
