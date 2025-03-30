@@ -50,7 +50,13 @@ func (pr PostgresRepository) GetById(productId int) (*domain.Product, error) {
 }
 
 func (pr PostgresRepository) Create(body *domain.Product) error {
-	panic("implement me")
+	row := pr.Conn.QueryRow("Insert into products (name, quantity, code_value, is_published, expiration, price) values ($1, $2, $3, $4, $5, $6) returning id", body.Name, body.Quantity, body.CodeValue, body.IsPublished, body.Expiration, body.Price)
+
+	if err := row.Scan(&body.ID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (pr PostgresRepository) GetByCodeValue(codeValue string) (*domain.Product, error) {
