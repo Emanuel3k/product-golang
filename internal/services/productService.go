@@ -82,7 +82,7 @@ func (ps *productService) UpdateById(productId int, body domain.UpdateBodyReques
 		}
 	}
 
-	product := body.UpdateToDomain()
+	product := body.UpdateToDomain(exists)
 
 	if err := ps.productRepository.UpdateById(productId, product); err != nil {
 		return nil, err

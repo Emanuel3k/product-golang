@@ -1,43 +1,41 @@
 package domain
 
-import "time"
-
 type Product struct {
-	ID          int       `json:"id"`
-	Name        string    `json:"name"`
-	Quantity    int       `json:"quantity"`
-	CodeValue   string    `json:"codeValue"`
-	IsPublished bool      `json:"isPublished"`
-	Expiration  time.Time `json:"expiration"`
-	Price       float64   `json:"price"`
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Quantity    int     `json:"quantity"`
+	CodeValue   string  `json:"codeValue"`
+	IsPublished bool    `json:"isPublished"`
+	Expiration  string  `json:"expiration"`
+	Price       float64 `json:"price"`
 }
 
 type CreateBodyRequest struct {
-	Name        string    `json:"name" validate:"required"`
-	Quantity    int       `json:"quantity" validate:"required"`
-	CodeValue   string    `json:"codeValue" validate:"required"`
-	IsPublished bool      `json:"isPublished"`
-	Expiration  time.Time `json:"expiration" validate:"required"`
-	Price       float64   `json:"price" validate:"required"`
+	Name        string  `json:"name" validate:"required"`
+	Quantity    int     `json:"quantity" validate:"required"`
+	CodeValue   string  `json:"codeValue" validate:"required"`
+	IsPublished bool    `json:"isPublished"`
+	Expiration  string  `json:"expiration" validate:"required"`
+	Price       float64 `json:"price" validate:"required"`
 }
 
 type UpdateBodyRequest struct {
-	Name        *string    `json:"name"`
-	Quantity    *int       `json:"quantity"`
-	CodeValue   *string    `json:"codeValue"`
-	IsPublished *bool      `json:"isPublished"`
-	Expiration  *time.Time `json:"expiration"`
-	Price       *float64   `json:"price"`
+	Name        *string  `json:"name"`
+	Quantity    *int     `json:"quantity"`
+	CodeValue   *string  `json:"codeValue"`
+	IsPublished *bool    `json:"isPublished"`
+	Expiration  *string  `json:"expiration"`
+	Price       *float64 `json:"price"`
 }
 
 type ResponseBody struct {
-	ID          int       `json:"id"`
-	Name        string    `json:"name"`
-	Quantity    int       `json:"quantity"`
-	CodeValue   string    `json:"codeValue"`
-	IsPublished bool      `json:"isPublished"`
-	Expiration  time.Time `json:"expiration"`
-	Price       float64   `json:"price"`
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Quantity    int     `json:"quantity"`
+	CodeValue   string  `json:"codeValue"`
+	IsPublished bool    `json:"isPublished"`
+	Expiration  string  `json:"expiration"`
+	Price       float64 `json:"price"`
 }
 
 func (cbr *CreateBodyRequest) CreateToDomain() Product {
@@ -51,8 +49,7 @@ func (cbr *CreateBodyRequest) CreateToDomain() Product {
 	}
 }
 
-func (cbr *UpdateBodyRequest) UpdateToDomain() *Product {
-	product := &Product{}
+func (cbr *UpdateBodyRequest) UpdateToDomain(product *Product) *Product {
 
 	if cbr.Name != nil {
 		product.Name = *cbr.Name
